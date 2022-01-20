@@ -28,6 +28,11 @@ var reloaderPidFileName = "/etc/frr_reloader/reloader.pid"
 // should also be considered.
 const configTemplate = `
 log file /etc/frr/frr.log {{.Loglevel}}
+log stdout {{.Loglevel}}
+{{- if eq .Loglevel "debugging" }}
+  some other stuffs
+{{- end }}
+
 log timestamp precision 3
 hostname {{.Hostname}}
 ip nht resolve-via-default

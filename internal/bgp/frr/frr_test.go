@@ -465,3 +465,21 @@ func TestTwoAdvertisements(t *testing.T) {
 
 	testCheckConfigFile(t)
 }
+
+func TestLoggingConfiguration(t *testing.T) {
+	testSetup(t)
+
+	l := log.NewNopLogger()
+	sessionManager := NewSessionManager(l)
+	defer close(sessionManager.reloadConfig)
+
+	sessionManager.logLevel = "level-xyz"
+
+	config, err := sessionManager.createConfig()
+	if err != nil {
+		t.Fatalf("Error while creating configuration: %s", err)
+	}
+
+	sessionManager.reloadConfig <- config
+	testCheckConfigFile(t)
+}

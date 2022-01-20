@@ -22,6 +22,7 @@ type sessionManager struct {
 	sessions     map[string]*session
 	bfdProfiles  []BFDProfile
 	reloadConfig chan *frrConfig
+	logLevel     string
 }
 
 type session struct {
@@ -195,10 +196,12 @@ func (sm *sessionManager) createConfig() (*frrConfig, error) {
 
 	config := &frrConfig{
 		Hostname:    hostname,
-		Loglevel:    "informational",
+		Loglevel:    sm.logLevel,
 		Routers:     make(map[string]*routerConfig),
 		BFDProfiles: sm.bfdProfiles,
 	}
+
+	// TODO - should we leave it for (weird) backward compatibility?
 	frrLogLevel, found := os.LookupEnv("FRR_LOGGING_LEVEL")
 	if found {
 		config.Loglevel = frrLogLevel
