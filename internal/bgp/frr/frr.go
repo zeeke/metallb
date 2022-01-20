@@ -283,7 +283,7 @@ func (sm *sessionManager) createConfig() (*frrConfig, error) {
 
 var debounceTimeout = 500 * time.Millisecond
 
-func NewSessionManager(l log.Logger) *sessionManager {
+func NewSessionManager(l log.Logger, logLevel string) *sessionManager {
 	res := &sessionManager{
 		sessions:     map[string]*session{},
 		bfdProfiles:  []BFDProfile{},

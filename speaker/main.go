@@ -125,10 +125,11 @@ func main() {
 
 	// Setup all clients and speakers, config decides what is being done runtime.
 	ctrl, err := newController(controllerConfig{
-		MyNode:  *myNode,
-		Logger:  logger,
-		SList:   sList,
-		bgpType: bgpImplementation(bgpType),
+		MyNode:   *myNode,
+		Logger:   logger,
+		LogLevel: *logLevel,
+		SList:    sList,
+		bgpType:  bgpImplementation(bgpType),
 	})
 	if err != nil {
 		level.Error(logger).Log("op", "startup", "error", err, "msg", "failed to create MetalLB controller")
@@ -188,9 +189,10 @@ type controller struct {
 }
 
 type controllerConfig struct {
-	MyNode string
-	Logger log.Logger
-	SList  SpeakerList
+	MyNode   string
+	Logger   log.Logger
+	LogLevel string
+	SList    SpeakerList
 
 	bgpType bgpImplementation
 
@@ -206,7 +208,7 @@ func newController(cfg controllerConfig) (*controller, error) {
 			myNode:         cfg.MyNode,
 			svcAds:         make(map[string][]*bgp.Advertisement),
 			bgpType:        cfg.bgpType,
-			sessionManager: newBGP(cfg.bgpType, cfg.Logger),
+			sessionManager: newBGP(cfg.bgpType, cfg.Logger, cfg.LogLevel),
 		},
 	}
 
